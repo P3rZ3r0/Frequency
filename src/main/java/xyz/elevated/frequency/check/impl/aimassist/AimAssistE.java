@@ -9,7 +9,7 @@ import xyz.elevated.frequency.util.MathUtil;
 @CheckData(name = "AimAssist (E)")
 public final class AimAssistE extends RotationCheck {
     private float lastDeltaYaw = 0.0f, lastDeltaPitch = 0.0f;
-    private int buffer = 0;
+    private float buffer = 0;
 
     public AimAssistE(final PlayerData playerData) {
         super(playerData);
@@ -50,14 +50,16 @@ public final class AimAssistE extends RotationCheck {
             final boolean invalidX = moduloX > 90.d && floorModuloX > 0.1;
             final boolean invalidY = moduloY > 90.d && floorModuloY > 0.1;
 
-            if (invalidX || invalidY) {
+            if(playerData.getCinematic().get()) buffer = Math.max(buffer - 0.1f, 0);
+
+            if (invalidX && invalidY) {
                 buffer = Math.min(buffer + 1, 200);
 
-                if (buffer > 10) {
+                if (buffer > 8) {
                     fail();
                 }
             } else {
-                buffer = 0;
+                buffer = Math.max(buffer - 0.25f, 0);
             }
         }
 
