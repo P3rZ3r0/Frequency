@@ -1,7 +1,5 @@
 package xyz.elevated.frequency.wrapper;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.minecraft.server.v1_8_R3.Packet;
 
 import java.lang.reflect.Field;

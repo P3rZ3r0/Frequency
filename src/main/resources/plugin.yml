@@ -1,5 +1,10 @@
 name: Frequency
-authors: [Elevated, Gson]
+authors: [Elevated, Gson, P3rZr3r0, Alan31]
 version: 1.0
 softdepend: [DiscordLib]
 main: xyz.elevated.frequency.FrequencyPlugin
+
+commands:
+  fmac:
+    description: Commandos hehehheheehhehehehehe
+    usage: /fmac

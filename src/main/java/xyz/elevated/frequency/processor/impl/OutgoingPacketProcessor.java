@@ -24,6 +24,8 @@ public final class OutgoingPacketProcessor implements Processor<Packet<PacketLis
                 final double velocityZ = wrapper.getZ();
 
                 playerData.getVelocityManager().addVelocityEntry(velocityX, velocityY, velocityZ);
+
+                playerData.getVelocityManager().handleVel(velocityX, velocityY, velocityZ);
             }
         } else if (packet instanceof PacketPlayOutEntityTeleport) {
             final WrappedPlayOutTeleport wrapper = new WrappedPlayOutTeleport(packet);

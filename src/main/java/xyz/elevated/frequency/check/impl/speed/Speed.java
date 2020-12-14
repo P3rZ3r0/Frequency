@@ -52,7 +52,7 @@ public final class Speed extends PositionCheck {
         double attributeSpeed = 1.d;
 
         // Run calculations to if the player is on ground and if they're exempt
-        final boolean onGround = entityPlayer.onGround;
+        final boolean onGround = entityPlayer.onGround || to.getY() % 0.015625 == 0.0;
         final boolean exempt = this.isExempt(ExemptType.TPS, ExemptType.TELEPORTING);
 
         /*

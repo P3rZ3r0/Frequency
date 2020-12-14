@@ -3,7 +3,6 @@ package xyz.elevated.frequency.processor.impl;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.entity.Entity;
 import xyz.elevated.frequency.check.type.PacketCheck;
-import xyz.elevated.frequency.data.BoundingBox;
 import xyz.elevated.frequency.data.PlayerData;
 import xyz.elevated.frequency.data.impl.PositionManager;
 import xyz.elevated.frequency.data.impl.RotationManager;
@@ -51,6 +50,14 @@ public final class IncomingPacketProcessor implements Processor<Packet<PacketLis
             playerData.getCheckManager().getChecks().stream()
                     .filter(PacketCheck.class::isInstance)
                     .forEach(check -> check.process(wrapper));
+
+            if(!onGround) {
+                playerData.setAirTicks(playerData.getAirTicks() + 1);
+                playerData.setGroundTicks(0);
+            } else {
+                playerData.setAirTicks(0);
+                playerData.setGroundTicks(playerData.getGroundTicks() + 1);
+            }
         } else if (packet instanceof PacketPlayInUseEntity) {
             final WrappedPlayInUseEntity wrapper = new WrappedPlayInUseEntity(packet);
 
@@ -160,6 +167,8 @@ public final class IncomingPacketProcessor implements Processor<Packet<PacketLis
             playerData.getCheckManager().getChecks().stream()
                     .filter(PacketCheck.class::isInstance)
                     .forEach(check -> check.process(wrapper));
+
+            playerData.getVelocityManager().handleTrans(wrapper);
         }
     }
 }

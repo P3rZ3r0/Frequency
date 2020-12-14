@@ -3,8 +3,10 @@ package xyz.elevated.frequency.data;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.AxisAlignedBB;
+import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,6 +42,8 @@ public final class PlayerData {
     private final Observable<Double> cps = new Observable<>(0.0);
     private final Observable<Double> rate = new Observable<>(0.0);
     private final Observable<BoundingBox> boundingBox = new Observable<>(new BoundingBox(0, 0, 0));
+    private int airTicks = 0;
+    private int groundTicks = 0;
 
     private final Observable<RotationUpdate> rotationUpdate = new Observable<>(new RotationUpdate(0, 0));
     private final Observable<PositionUpdate> positionUpdate = new Observable<>(new PositionUpdate(null, null, false));
@@ -49,7 +53,7 @@ public final class PlayerData {
     private final ExemptManager exemptManager = new ExemptManager(this);
     private final PositionManager positionManager = new PositionManager(this);
     private final ActionManager actionManager = new ActionManager(this);
-    private final VelocityManager velocityManager = new VelocityManager();
+    private final VelocityManager velocityManager = new VelocityManager(this);
 
     public PlayerData(final Player bukkitPlayer) {
         this.bukkitPlayer = bukkitPlayer;
@@ -59,5 +63,9 @@ public final class PlayerData {
                 getTargetLocations().clear();
             }
         });
+    }
+
+    public void sendPacket(final Packet<?> p) {
+        ((CraftPlayer) bukkitPlayer).getHandle().playerConnection.sendPacket(p);
     }
 }

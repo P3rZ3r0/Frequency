@@ -26,7 +26,7 @@ public enum ExemptType {
     /**
      * Return if a player sent a teleport packet in the last 120ms.
      */
-    TELEPORTING(playerData -> playerData.getActionManager().getTeleported().get() || playerData.getTicks().get() - playerData.getJoined().get() < 50L),
+    TELEPORTING(playerData -> playerData.getActionManager().getTeleported().get() || playerData.getTicks().get() - playerData.getJoined().get() < 100L),
 
     /**
      * Exempts the player from a certain check if the chunk he's currently in isn't loaded
@@ -36,7 +36,7 @@ public enum ExemptType {
     /**
      * Returns true if the player has had any velocity changes in the past 9000ms
      */
-    VELOCITY(playerData -> playerData.getVelocityManager().getMaxVertical() > 0.0 || playerData.getVelocityManager().getMaxHorizontal() > 0.0);
+    VELOCITY(playerData -> playerData.getVelocityManager().isTakingVelocity());
 
     private final Function<PlayerData, Boolean> exception;
 

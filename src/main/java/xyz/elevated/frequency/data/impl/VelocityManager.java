@@ -1,18 +1,30 @@
 package xyz.elevated.frequency.data.impl;
 
 import lombok.Getter;
+import net.minecraft.server.v1_8_R3.PacketPlayOutTransaction;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_8_R3.PlayerConnectionUtils;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import xyz.elevated.frequency.Frequency;
+import xyz.elevated.frequency.data.PlayerData;
+import xyz.elevated.frequency.util.NmsUtil;
+import xyz.elevated.frequency.wrapper.impl.client.WrappedPlayInTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 public final class VelocityManager {
+    private final PlayerData data;
+
     // This is where we will store all the velocity data
     @Getter
     private final List<VelocitySnapshot> velocities;
 
-    public VelocityManager() {
+    public VelocityManager(final PlayerData data) {
         velocities = new ArrayList<>();
+        this.data = data;
     }
 
     // Remove any old and unnecessary velocity occurrences
@@ -21,6 +33,37 @@ public final class VelocityManager {
     // Add the player's velocity to the list
     public void addVelocityEntry(final double x, final double y, final double z) {
         velocities.add(new VelocitySnapshot(x, y, z, x * x + z * z, Math.abs(y)));
+    }
+
+    @Getter private double velocityX, velocityY, velocityZ, lastVelocityX, lastVelocityY, lastVelocityZ;
+    @Getter private short velocityId;
+    @Getter private boolean verifyingVelocity;
+    @Getter private int maxVelTicks, velTicks, ticksSinceVel;
+
+    public void handleVel(final double velocityX, final double velocityY, final double velocityZ) {
+        ticksSinceVel = 0;
+
+        lastVelocityX = this.velocityX;
+        lastVelocityY = this.velocityY;
+        lastVelocityZ = this.velocityZ;
+
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.velocityZ = velocityZ;
+
+        velocityId = (short) ThreadLocalRandom.current().nextInt(32767);
+        verifyingVelocity = true;
+        data.sendPacket(new PacketPlayOutTransaction(0, velocityId, false));
+    }
+
+    public void handleTrans(final WrappedPlayInTransaction p) {
+        if(verifyingVelocity && p.getHash() == velocityId) {
+            verifyingVelocity = false;
+
+            velTicks = Frequency.INSTANCE.getTickProcessor().getTicks();
+
+            maxVelTicks = (int) (((lastVelocityZ + lastVelocityX) / 2 + 2) * 15);
+        }
     }
 
     // Get the highest horizontal velocity
@@ -45,6 +88,10 @@ public final class VelocityManager {
         } catch (Exception e) {
             return 1.0;
         }
+    }
+
+    public boolean isTakingVelocity() {
+        return Math.abs(Frequency.INSTANCE.getTickProcessor().getTicks() - velTicks) < maxVelTicks;
     }
 
     public void apply() {

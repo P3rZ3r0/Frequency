@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import xyz.elevated.frequency.check.CheckData;
 import xyz.elevated.frequency.check.type.PositionCheck;
 import xyz.elevated.frequency.data.PlayerData;
+import xyz.elevated.frequency.exempt.type.ExemptType;
 import xyz.elevated.frequency.update.PositionUpdate;
 
 @CheckData(name = "Jesus (A)")
@@ -29,8 +30,10 @@ public final class JesusA extends PositionCheck {
         final boolean touchingLiquid = playerData.getPositionManager().getTouchingLiquid().get();
         final boolean stationary = deltaX % 1.0 == 0.0 && deltaZ % 1.0 == 0.0;
 
+        final boolean exempt = isExempt(ExemptType.VELOCITY);
+
         // If the delta is greater than 0.0 and the player is stationary
-        if (deltaY > 0.0 && !onGround && !touchingLiquid && stationary) {
+        if (deltaY > 0.0 && !onGround && !touchingLiquid && stationary && !exempt) {
             final double horizontalDistance = Math.hypot(deltaX, deltaZ);
 
             // If the player is moving too, flag

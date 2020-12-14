@@ -2,6 +2,7 @@ package xyz.elevated.frequency;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import xyz.elevated.frequency.command.CommandManager;
 import xyz.elevated.frequency.data.type.PlayerDataManager;
 import xyz.elevated.frequency.listener.PlayerListener;
 import xyz.elevated.frequency.processor.ProcessorManager;
@@ -19,6 +20,7 @@ public enum Frequency {
     private final ProcessorManager processorManager = new ProcessorManager();
     private final PlayerDataManager playerDataManager = new PlayerDataManager();
     private final TickManager tickProcessor = new TickManager();
+    private final CommandManager commandManager = new CommandManager();
 
     private final Executor executorAlert = Executors.newSingleThreadExecutor();
     private final Executor executorPacket = Executors.newSingleThreadExecutor();
@@ -30,6 +32,7 @@ public enum Frequency {
 
         tickProcessor.start();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), plugin);
+        getPlugin().getCommand("fmac").setExecutor(commandManager);
     }
 
     public void stop(final FrequencyPlugin plugin) {
