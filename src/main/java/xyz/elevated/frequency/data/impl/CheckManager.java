@@ -21,6 +21,7 @@ import xyz.elevated.frequency.check.impl.pingspoof.PingSpoofA;
 import xyz.elevated.frequency.check.impl.pingspoof.PingSpoofB;
 import xyz.elevated.frequency.check.impl.speed.Speed;
 import xyz.elevated.frequency.check.impl.timer.TimerA;
+import xyz.elevated.frequency.check.impl.velocity.VelocityA;
 import xyz.elevated.frequency.data.PlayerData;
 
 import java.util.Collection;
@@ -45,6 +46,7 @@ public final class CheckManager {
                 .put(AimAssistC.class, new AimAssistC(playerData))
                 .put(AimAssistD.class, new AimAssistD(playerData))
                 .put(AimAssistE.class, new AimAssistE(playerData))
+                .put(AimAssistF.class, new AimAssistF(playerData))
                 .put(BadPacketsA.class, new BadPacketsA(playerData))
                 .put(BadPacketsB.class, new BadPacketsB(playerData))
                 .put(BadPacketsC.class, new BadPacketsC(playerData))
@@ -81,6 +83,7 @@ public final class CheckManager {
                 .put(InvalidDirection.class, new InvalidDirection(playerData))
                 .put(PingSpoofA.class, new PingSpoofA(playerData))
                 .put(PingSpoofB.class, new PingSpoofB(playerData))
+                .put(VelocityA.class, new VelocityA(playerData))
                 .build();
     }
 

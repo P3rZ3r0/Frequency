@@ -1,6 +1,7 @@
 package xyz.elevated.frequency.data.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTransaction;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.PlayerConnectionUtils;
@@ -38,7 +39,8 @@ public final class VelocityManager {
     @Getter private double velocityX, velocityY, velocityZ, lastVelocityX, lastVelocityY, lastVelocityZ;
     @Getter private short velocityId;
     @Getter private boolean verifyingVelocity;
-    @Getter private int maxVelTicks, velTicks, ticksSinceVel;
+    @Getter private int maxVelTicks, velTicks;
+    @Setter @Getter private int ticksSinceVel;
 
     public void handleVel(final double velocityX, final double velocityY, final double velocityZ) {
         ticksSinceVel = 0;

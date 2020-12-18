@@ -22,7 +22,7 @@ public final class PingSpoofA extends PacketCheck {
             final boolean joined = playerData.getTicks().get() - playerData.getJoined().get() < 10;
             final boolean exempt = this.isExempt(ExemptType.LAGGING, ExemptType.TELEPORTING, ExemptType.TPS, ExemptType.CHUNK);
 
-            if (!exempt && !joined && transactionPing > keepAlivePing && Math.abs(transactionPing - keepAlivePing) > 50) fail();
+            if (!joined && transactionPing > keepAlivePing && Math.abs(transactionPing - keepAlivePing) > 50) fail();
         }
     }
 }
